@@ -28,22 +28,34 @@
 
 ## ⚡ 快速开始
 
+### 方式一：直接使用 npx（推荐，无需安装）
+
 ```bash
-# 1. 安装（选择一种方式）
-npm install -g rap2-mcp-tool
-# 或使用 npx（无需安装，推荐）
-npx -y rap2-mcp-tool@latest
-
-# 2. 配置环境变量
-export RAP2_BASE_URL="http://rap2.example.com"
-export RAP2_EMAIL="your@email.com"
-export RAP2_PASSWORD="yourpassword"
-
-# 3. 启动服务器
-rap2-mcp
-# 或使用 npx（推荐）
+# 直接运行，无需安装
 npx -y rap2-mcp-tool@latest
 ```
+
+### 方式二：在 AI 编程助手中集成（最推荐）
+
+直接在您的 AI 编程助手（如 Cursor、Claude Desktop）中配置 MCP 服务器，无需手动启动：
+
+```json
+{
+  "mcpServers": {
+    "rap2": {
+      "command": "npx",
+      "args": ["-y", "rap2-mcp-tool@latest"],
+      "env": {
+        "RAP2_BASE_URL": "http://rap2.example.com",
+        "RAP2_EMAIL": "your@email.com",
+        "RAP2_PASSWORD": "yourpassword"
+      }
+    }
+  }
+}
+```
+
+配置完成后，AI 助手将自动启动 RAP2 MCP 服务器，您可以直接在对话中使用 RAP2 接口文档功能。
 
 ## 🚀 特性
 
@@ -60,37 +72,31 @@ npx -y rap2-mcp-tool@latest
 - **🔧 易于配置** - 简单的环境变量配置，快速上手
 - **📈 可扩展** - 模块化设计，易于扩展新功能
 
-## 📦 安装
+## 📦 安装方式
 
-### 使用 npm（推荐）
-
-```bash
-npm install -g rap2-mcp-tool
-```
-
-### 使用 pnpm
+### 推荐方式：使用 npx（无需安装）
 
 ```bash
-pnpm add -g rap2-mcp-tool
-```
-
-### 使用 yarn
-
-```bash
-yarn global add rap2-mcp-tool
-```
-
-### 使用 npx（无需安装）
-
-```bash
-# 使用最新版本
-npx rap2-mcp-tool
-
-# 或明确指定使用最新版本
+# 直接使用最新版本，无需安装
 npx -y rap2-mcp-tool@latest
 ```
 
-### 从源码安装
+### 可选方式：全局安装
+
+如果您需要频繁使用命令行工具，可以选择全局安装：
+
+```bash
+# 使用 npm
+npm install -g rap2-mcp-tool
+
+# 使用 pnpm
+pnpm add -g rap2-mcp-tool
+
+# 使用 yarn
+yarn global add rap2-mcp-tool
+```
+
+### 开发方式：从源码安装
 
 ```bash
 git clone https://github.com/MarveleE/rap2-mcp.git
@@ -114,43 +120,47 @@ npm install
 > - **账号密码**：使用 `RAP2_EMAIL` + `RAP2_PASSWORD`
 > - **Cookie 认证**：使用 `RAP2_SID` + `RAP2_SID_SIG`
 
-### 启动服务器
+### 手动启动服务器（可选）
+
+如果您需要手动启动服务器进行测试或调试：
 
 #### 使用账号密码认证
 
 ```bash
-# 全局安装后直接使用命令
-RAP2_BASE_URL="http://rap2.example.com" \
-RAP2_EMAIL="you@example.com" \
-RAP2_PASSWORD="yourpass" \
-rap2-mcp
-
-# 或使用 npx（无需安装，推荐）
+# 使用 npx（推荐，无需安装）
 RAP2_BASE_URL="http://rap2.example.com" \
 RAP2_EMAIL="you@example.com" \
 RAP2_PASSWORD="yourpass" \
 npx -y rap2-mcp-tool@latest
+
+# 或全局安装后使用命令
+RAP2_BASE_URL="http://rap2.example.com" \
+RAP2_EMAIL="you@example.com" \
+RAP2_PASSWORD="yourpass" \
+rap2-mcp
 ```
 
 #### 使用 Cookie 认证
 
 ```bash
-# 全局安装后直接使用命令
-RAP2_BASE_URL="http://rap2.example.com" \
-RAP2_SID="your_sid_value" \
-RAP2_SID_SIG="your_sig_value" \
-rap2-mcp
-
-# 或使用 npx（无需安装，推荐）
+# 使用 npx（推荐，无需安装）
 RAP2_BASE_URL="http://rap2.example.com" \
 RAP2_SID="your_sid_value" \
 RAP2_SID_SIG="your_sig_value" \
 npx -y rap2-mcp-tool@latest
+
+# 或全局安装后使用命令
+RAP2_BASE_URL="http://rap2.example.com" \
+RAP2_SID="your_sid_value" \
+RAP2_SID_SIG="your_sig_value" \
+rap2-mcp
 ```
 
 ## 🔧 与 AI 编程助手集成
 
-### 推荐配置方式（类似 XcodeBuildMCP）
+> **🎯 这是最推荐的使用方式！** 直接在 AI 编程助手中集成，无需手动启动服务器。
+
+### 通用配置模板（推荐）
 
 ```json
 {
@@ -168,7 +178,7 @@ npx -y rap2-mcp-tool@latest
 }
 ```
 
-### Cursor
+### Cursor 配置
 
 在 Cursor 的 MCP 配置中添加：
 
@@ -176,23 +186,6 @@ npx -y rap2-mcp-tool@latest
 {
   "mcpServers": {
     "rap2": {
-      "command": "rap2-mcp",
-      "env": {
-        "RAP2_BASE_URL": "http://rap2.example.com",
-        "RAP2_EMAIL": "your@email.com",
-        "RAP2_PASSWORD": "yourpassword"
-      }
-    }
-  }
-}
-```
-
-或者使用 npx 方式（无需全局安装，推荐）：
-
-```json
-{
-  "mcpServers": {
-    "rap2": {
       "command": "npx",
       "args": ["-y", "rap2-mcp-tool@latest"],
       "env": {
@@ -205,26 +198,9 @@ npx -y rap2-mcp-tool@latest
 }
 ```
 
-### Claude Desktop
+### Claude Desktop 配置
 
 在 Claude Desktop 的配置文件中添加：
-
-```json
-{
-  "mcpServers": {
-    "rap2": {
-      "command": "rap2-mcp",
-      "env": {
-        "RAP2_BASE_URL": "http://rap2.example.com",
-        "RAP2_EMAIL": "your@email.com",
-        "RAP2_PASSWORD": "yourpassword"
-      }
-    }
-  }
-}
-```
-
-或者使用 npx 方式（无需全局安装，推荐）：
 
 ```json
 {
@@ -246,12 +222,13 @@ npx -y rap2-mcp-tool@latest
 
 任何支持 MCP 协议的客户端都可以使用此服务器，只需配置相应的启动命令和环境变量。
 
-#### 全局安装方式
+#### 推荐配置（npx 方式，无需安装）
 ```json
 {
   "mcpServers": {
     "rap2": {
-      "command": "rap2-mcp",
+      "command": "npx",
+      "args": ["-y", "rap2-mcp-tool@latest"],
       "env": {
         "RAP2_BASE_URL": "http://rap2.example.com",
         "RAP2_EMAIL": "your@email.com",
@@ -262,13 +239,12 @@ npx -y rap2-mcp-tool@latest
 }
 ```
 
-#### npx 方式（推荐，无需安装）
+#### 可选配置（全局安装方式）
 ```json
 {
   "mcpServers": {
     "rap2": {
-      "command": "npx",
-      "args": ["-y", "rap2-mcp-tool@latest"],
+      "command": "rap2-mcp",
       "env": {
         "RAP2_BASE_URL": "http://rap2.example.com",
         "RAP2_EMAIL": "your@email.com",
@@ -440,7 +416,7 @@ npx -y rap2-mcp-tool@latest --help
 # 使用 npx（推荐，无需安装）
 npx -y rap2-mcp-tool@latest
 
-# 或使用全局安装
+# 或使用全局安装（可选）
 npm install -g rap2-mcp-tool
 
 # 验证安装
