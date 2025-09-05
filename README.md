@@ -3,6 +3,26 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![RAP2](https://img.shields.io/badge/RAP2-API%20Docs-orange.svg)](https://github.com/thx/rap2-delos)
+[![AI Ready](https://img.shields.io/badge/AI-Ready-purple.svg)](https://openai.com/)
+[![Claude](https://img.shields.io/badge/Claude-Compatible-green.svg)](https://claude.ai/)
+[![Cursor](https://img.shields.io/badge/Cursor-Compatible-blue.svg)](https://cursor.sh/)
+[![VSCode](https://img.shields.io/badge/VSCode-Compatible-blue.svg)](https://code.visualstudio.com/)
+[![npm](https://img.shields.io/badge/npm-Package-red.svg)](https://www.npmjs.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-Open%20Source-black.svg)](https://github.com/)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Downloads](https://img.shields.io/badge/Downloads-Growing-lightblue.svg)](https://www.npmjs.com/package/rap2-mcp-tool)
+[![Stars](https://img.shields.io/badge/Stars-⭐-gold.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Forks](https://img.shields.io/badge/Forks-🍴-silver.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Issues](https://img.shields.io/badge/Issues-Welcome-orange.svg)](https://github.com/MarveleE/rap2-mcp/issues)
+[![PRs](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg)](https://github.com/MarveleE/rap2-mcp/pulls)
+[![Maintenance](https://img.shields.io/badge/Maintenance-Active-brightgreen.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Security](https://img.shields.io/badge/Security-Safe-green.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Performance](https://img.shields.io/badge/Performance-Fast-blue.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Documentation](https://img.shields.io/badge/Documentation-Complete-blue.svg)](https://github.com/MarveleE/rap2-mcp)
+[![Community](https://img.shields.io/badge/Community-Friendly-pink.svg)](https://github.com/MarveleE/rap2-mcp)
 
 > **RAP2 MCP Server** - 将 RAP2 API 文档和接口管理能力无缝集成到 AI 编程助手中，让 LLM 能够直接访问和操作 RAP2 接口文档。
 
@@ -14,6 +34,12 @@
 - **🔐 灵活认证** - 支持账号密码和 Cookie 两种认证方式
 - **📊 结构化日志** - 完整的请求日志记录，便于调试和监控
 - **⚡ 高性能** - 基于 undici 的高性能 HTTP 客户端
+- **🛡️ 安全可靠** - 支持多种认证方式，确保数据安全
+- **🎯 精准匹配** - 智能接口搜索，快速定位所需 API
+- **🔄 实时同步** - 与 RAP2 实例实时同步，确保数据最新
+- **📱 跨平台** - 支持 Windows、macOS、Linux 等主流操作系统
+- **🔧 易于配置** - 简单的环境变量配置，快速上手
+- **📈 可扩展** - 模块化设计，易于扩展新功能
 
 ## 📦 安装
 
@@ -289,10 +315,12 @@ sudo chmod 666 /tmp/rap-mcp.log
 
 ## 📋 系统要求
 
-- **Node.js**: >= 18.0.0
-- **操作系统**: Windows, macOS, Linux
-- **内存**: 最少 128MB
-- **网络**: 需要访问 RAP2 实例的网络连接
+- **🟢 Node.js**: >= 18.0.0
+- **💻 操作系统**: Windows, macOS, Linux
+- **🧠 内存**: 最少 128MB
+- **🌐 网络**: 需要访问 RAP2 实例的网络连接
+- **📦 包管理器**: npm, pnpm, yarn
+- **🔧 开发工具**: 支持 MCP 协议的 AI 编程助手
 
 ## 📄 许可证
 
@@ -302,19 +330,29 @@ sudo chmod 666 /tmp/rap-mcp.log
 
 欢迎贡献代码！请遵循以下步骤：
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. **🍴 Fork 本仓库** - 创建您的项目副本
+2. **🌿 创建特性分支** (`git checkout -b feature/AmazingFeature`) - 为您的功能创建分支
+3. **💾 提交更改** (`git commit -m 'Add some AmazingFeature'`) - 提交您的改进
+4. **📤 推送到分支** (`git push origin feature/AmazingFeature`) - 推送您的更改
+5. **🔄 开启 Pull Request** - 创建合并请求
+
+### 贡献类型
+- **🐛 Bug 修复** - 修复现有问题
+- **✨ 新功能** - 添加新特性
+- **📚 文档改进** - 完善文档
+- **🎨 代码优化** - 提升代码质量
+- **🧪 测试用例** - 增加测试覆盖
 
 ## 📞 支持
 
 如果您遇到问题或有建议，请：
 
-- 提交 [Issue](https://github.com/MarveleE/rap2-mcp/issues)
-- 查看 [Wiki](https://github.com/MarveleE/rap2-mcp/wiki)
-- 联系维护者
+- **🐛 提交 [Issue](https://github.com/MarveleE/rap2-mcp/issues)** - 报告 Bug 或提出功能请求
+- **📖 查看 [Wiki](https://github.com/MarveleE/rap2-mcp/wiki)** - 详细文档和教程
+- **💬 联系维护者** - 直接沟通和技术支持
+- **⭐ 给项目点赞** - 支持项目发展
+- **🍴 Fork 项目** - 参与开源贡献
+- **📝 提交 PR** - 贡献代码改进
 
 ## ⭐ Star History
 
