@@ -1,12 +1,41 @@
 {
-  "name": "rap_mcp_tool",
+  "name": "rap2-mcp-tool",
   "version": "0.1.0",
   "type": "module",
-  "description": "RAP2 API minimal client (Node.js, pure API, no OCR)",
+  "description": "RAP2 MCP Server - API Documentation for LLMs and AI Code Editors",
   "main": "src/rap2Client.js",
+  "bin": {
+    "rap2-mcp": "src/mcp-server.js"
+  },
   "scripts": {
     "test": "node src/test.js",
-    "mcp": "node src/mcp-server.js"
+    "mcp": "node src/mcp-server.js",
+    "start": "node src/mcp-server.js"
+  },
+  "keywords": [
+    "rap2",
+    "mcp",
+    "model-context-protocol",
+    "api-documentation",
+    "ai",
+    "llm",
+    "claude",
+    "cursor",
+    "vscode",
+    "api-client",
+    "documentation",
+    "openapi",
+    "swagger"
+  ],
+  "author": "MarveleE",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarveleE/rap2-mcp.git"
+  },
+  "homepage": "https://github.com/MarveleE/rap2-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/MarveleE/rap2-mcp/issues"
   },
   "engines": {
     "node": ">=18"
@@ -15,7 +44,10 @@
     "@modelcontextprotocol/sdk": "^0.2.2",
     "undici": "^6.19.8",
     "pino": "^9.5.0"
-  }
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ]
 }
-
-
