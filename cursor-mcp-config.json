@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "rap2": {
+      "command": "node",
+      "args": ["/Users/groot/rap_mcp_tool/src/mcp-server.js"],
+      "env": {
+        "RAP2_BASE_URL": "http://rap2.example.com",
+        "RAP2_EMAIL": "your@email.com",
+        "RAP2_PASSWORD": "yourpassword"
+      }
+    }
+  }
+}
