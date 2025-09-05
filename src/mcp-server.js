@@ -2,7 +2,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { Rap2Client } from './rap2Client.js';
 import pino from 'pino';
 
@@ -110,6 +110,11 @@ const server = new Server(
   { name: 'rap2-mcp-tool', version: '0.1.4' },
   { capabilities: { tools: { list: tools } } },
 );
+
+// 显式实现 tools/list，兼容不同客户端对工具清单的获取方式
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return { tools };
+});
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const name = req.params.name;
