@@ -1,0 +1,21 @@
+{
+  "name": "rap_mcp_tool",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "RAP2 API minimal client (Node.js, pure API, no OCR)",
+  "main": "src/rap2Client.js",
+  "scripts": {
+    "test": "node src/test.js",
+    "mcp": "node src/mcp-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.2.2",
+    "undici": "^6.19.8",
+    "pino": "^9.5.0"
+  }
+}
+
+
