@@ -1,6 +1,6 @@
 {
   "name": "rap2-mcp-tool",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "RAP2 MCP Server - API Documentation for LLMs and AI Code Editors",
   "main": "src/rap2Client.js",
