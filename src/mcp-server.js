@@ -107,7 +107,7 @@ const tools = [
 ];
 
 const server = new Server(
-  { name: 'rap2-mcp-tool', version: '0.1.3' },
+  { name: 'rap2-mcp-tool', version: '0.1.4' },
   { capabilities: { tools: { list: tools } } },
 );
 
