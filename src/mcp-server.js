@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { Server } from '@modelcontextprotocol/sdk/server';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { Rap2Client } from './rap2Client.js';
@@ -107,7 +107,7 @@ const tools = [
 ];
 
 const server = new Server(
-  { name: 'rap2-mcp-tool', version: '0.1.0' },
+  { name: 'rap2-mcp-tool', version: '0.1.3' },
   { capabilities: { tools: { list: tools } } },
 );
 
