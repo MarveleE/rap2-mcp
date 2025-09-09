@@ -48,7 +48,7 @@ function createClient() {
 const tools = [
   {
     name: 'rap2_test_connection',
-    description: '测试连接并校验会话：探测 /repository/joined，必要时自动登录后再探测',
+    description: '测试连接并校验会话：探测 /repository/joined，必要时自动登录后再探测（可用提示：\"测试rap连接\"、\"确保已登录\"）',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -72,7 +72,7 @@ const tools = [
   },
   {
     name: 'rap2_get_interface_by_id',
-    description: '根据接口 ID 获取接口详情',
+    description: '根据接口 ID 获取接口详情（自然语言触发关键词：\"获取接口id<数字>的信息\"、\"接口<数字>\"、\"查看接口<数字>\"）',
     inputSchema: {
       type: 'object',
       properties: {
@@ -94,7 +94,7 @@ const tools = [
   },
   {
     name: 'rap2_search_interfaces_by_keyword',
-    description: '按关键字搜索接口（可选限定仓库）',
+    description: '按关键字搜索接口（可选限定仓库）（自然语言触发：\"搜索接口 <关键词>\"、\"查找 <关键词> 接口\"）',
     inputSchema: {
       type: 'object',
       properties: {
@@ -102,6 +102,17 @@ const tools = [
         repositoryId: { type: ['string', 'number'], description: '仓库 ID（可选）' },
       },
       required: ['keyword'],
+    },
+  },
+  {
+    name: 'rap2_nl_get_interface_by_text',
+    description: '自然语言获取接口：解析形如“获取接口id123的信息/接口123/查看接口456”的话术并转为 rap2_get_interface_by_id 调用',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', description: '自然语言文本' },
+      },
+      required: ['text'],
     },
   },
 ];
@@ -184,6 +195,24 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     logger.error({ tool: name, error: String(err?.message || err) }, 'tool error');
     return { content: [{ type: 'text', text: JSON.stringify({ error: String(err?.message || err) }) }] };
   }
+    if (name === 'rap2_nl_get_interface_by_text') {
+      const { text } = (req.params.arguments || {});
+      if (!text || typeof text !== 'string') throw new Error('text 不能为空');
+      const m = String(text).match(/接口\s*id\s*(\d+)|接口\s*(\d+)/i);
+      const id = m ? (m[1] || m[2]) : '';
+      if (!id) throw new Error('未在文本中识别到接口ID');
+      const client = createClient();
+      const ensure = await client.ensureSession();
+      if (!ensure) {
+        const res = await client.login();
+        if (res?.error) throw new Error(String(res.error));
+      }
+      const result = await client.getInterfaceById(String(id));
+      if (result?.error) throw new Error(String(result.error));
+      const payload = { interfaceId: String(id), data: result };
+      logger.info({ tool: name, resultSummary: { id: String(id) } }, 'tool success');
+      return { content: [{ type: 'text', text: JSON.stringify(payload) }] };
+    }
 });
 
 logger.info({ event: 'server.start' }, 'rap2 mcp server starting');

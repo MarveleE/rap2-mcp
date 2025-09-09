@@ -22,7 +22,7 @@ export class Rap2Client {
     return parts.length ? parts.join('; ') : '';
   }
 
-  async _fetch(path, { method = 'GET', headers = {}, body, timeoutMs = 20000, __skipPreLogin = false } = {}) {
+  async _fetch(path, { method = 'GET', headers = {}, body, timeoutMs = 20000, __skipPreLogin = false, __hasRetried = false } = {}) {
     if (this.alwaysLoginBeforeRequest && !__skipPreLogin) {
       try { await this.login(); } catch {}
     }
@@ -44,6 +44,22 @@ export class Rap2Client {
       let json;
       try { json = JSON.parse(text); } catch { json = { raw: text.slice(0, 500) }; }
       if (this.logger) this.logger.info({ url, method, status: res.status }, 'rap2 fetch done');
+
+      // 未登录/未授权检测与一次性自动重试
+      const rawStr = typeof json === 'object' && json && 'raw' in json ? String(json.raw || '') : '';
+      const looksLikeHtml = /<!DOCTYPE|<html|登录|login/i.test(rawStr);
+      const unauthorizedStatus = res.status === 401 || res.status === 403;
+      const explicitNotOk = json && typeof json === 'object' && json.isOk === false && /未登录|登录|login|权限/i.test(String(json.errMsg || ''));
+      const needRetry = (unauthorizedStatus || looksLikeHtml || explicitNotOk) && !__hasRetried && !__skipPreLogin;
+
+      if (needRetry) {
+        if (this.logger) this.logger.warn({ url, method, status: res.status }, 'rap2 fetch unauthorized, try login once');
+        const loginRes = await this.login();
+        if (!loginRes?.error) {
+          return await this._fetch(path, { method, headers, body, timeoutMs, __skipPreLogin: true, __hasRetried: true });
+        }
+      }
+
       return { status: res.status, data: json };
     } finally {
       clearTimeout(timer);
@@ -139,6 +155,11 @@ export class Rap2Client {
     }
     if (this.logger) this.logger.error({ step: 'login-failed' }, 'login flow');
     return { error: lastError || '登录失败(多次尝试后仍未通过验证码)' };
+  }
+
+  async ensureSession() {
+    const res = await this.login();
+    return !res?.error;
   }
 
   async getInterfaceById(interfaceId) {
