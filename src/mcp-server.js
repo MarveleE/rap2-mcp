@@ -121,7 +121,7 @@ const tools = [
     inputSchema: {
       type: 'object',
       properties: {
-        interfaceId: { type: ['string', 'number'], description: '接口 ID' },
+        interfaceId: { type: 'string', description: '接口 ID（传入字符串，内部会规范化）' },
       },
       required: ['interfaceId'],
     },
@@ -132,7 +132,7 @@ const tools = [
     inputSchema: {
       type: 'object',
       properties: {
-        repositoryId: { type: ['string', 'number'], description: '仓库 ID' },
+        repositoryId: { type: 'string', description: '仓库 ID（传入字符串）' },
       },
       required: ['repositoryId'],
     },
@@ -144,7 +144,7 @@ const tools = [
       type: 'object',
       properties: {
         keyword: { type: 'string', description: '搜索关键字' },
-        repositoryId: { type: ['string', 'number'], description: '仓库 ID（可选）' },
+        repositoryId: { type: 'string', description: '仓库 ID（可选，传入字符串）' },
       },
       required: ['keyword'],
     },
