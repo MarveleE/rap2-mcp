@@ -45,6 +45,51 @@ function createClient() {
   return client;
 }
 
+// 优化的参数验证和规范化函数
+function validateAndNormalizeId(paramName, value, allowEmpty = false) {
+  if (value === null || value === undefined) {
+    if (!allowEmpty) {
+      throw new Error(`参数错误: ${paramName} 不能为空`);
+    }
+    return undefined;
+  }
+
+  let normalized;
+  if (typeof value === 'number') {
+    normalized = String(value);
+  } else if (typeof value === 'string') {
+    if (!value.trim()) {
+      if (!allowEmpty) {
+        throw new Error(`参数错误: ${paramName} 不能是空字符串`);
+      }
+      return undefined;
+    }
+    normalized = value.trim();
+  } else {
+    throw new Error(`参数错误: ${paramName} 必须是数字或字符串，收到的是 ${typeof value}`);
+  }
+
+  // 验证ID格式
+  if (normalized && !/^\d+$/.test(normalized)) {
+    throw new Error(`参数错误: ${paramName} 必须是有效的数字字符串，收到的是 "${normalized}"`);
+  }
+
+  return normalized;
+}
+
+function validateAndNormalizeKeyword(keyword) {
+  if (!keyword) {
+    throw new Error('参数错误: keyword 不能为空');
+  }
+
+  if (typeof keyword === 'string' && !keyword.trim()) {
+    throw new Error('参数错误: keyword 不能是空字符串');
+  }
+
+  return typeof keyword === 'string' ? keyword.trim() : String(keyword);
+}
+
+
 const tools = [
   {
     name: 'rap2_test_connection',
@@ -72,7 +117,7 @@ const tools = [
   },
   {
     name: 'rap2_get_interface_by_id',
-    description: '根据接口 ID 获取接口详情（自然语言触发关键词：\"获取接口id<数字>的信息\"、\"接口<数字>\"、\"查看接口<数字>\"）',
+    description: '根据接口 ID 获取接口详情',
     inputSchema: {
       type: 'object',
       properties: {
@@ -94,7 +139,7 @@ const tools = [
   },
   {
     name: 'rap2_search_interfaces_by_keyword',
-    description: '按关键字搜索接口（可选限定仓库）（自然语言触发：\"搜索接口 <关键词>\"、\"查找 <关键词> 接口\"）',
+    description: '按关键字搜索接口（可选限定仓库）',
     inputSchema: {
       type: 'object',
       properties: {
@@ -102,17 +147,6 @@ const tools = [
         repositoryId: { type: ['string', 'number'], description: '仓库 ID（可选）' },
       },
       required: ['keyword'],
-    },
-  },
-  {
-    name: 'rap2_nl_get_interface_by_text',
-    description: '自然语言获取接口：解析形如“获取接口id123的信息/接口123/查看接口456”的话术并转为 rap2_get_interface_by_id 调用',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', description: '自然语言文本' },
-      },
-      required: ['text'],
     },
   },
 ];
@@ -165,54 +199,59 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     }
     if (name === 'rap2_get_interface_by_id') {
       const { interfaceId } = (req.params.arguments || {});
-      if (!interfaceId) throw new Error('interfaceId 不能为空');
+      const normalizedId = validateAndNormalizeId('interfaceId', interfaceId);
+
       const client = createClient();
-      const result = await client.getInterfaceById(String(interfaceId));
-      if (result?.error) throw new Error(String(result.error));
-      logger.info({ tool: name, resultSummary: Array.isArray(result) ? { length: result.length } : { ok: !!result } }, 'tool success');
-      return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+      const result = await client.getInterfaceById(normalizedId);
+
+      if (result?.error) {
+        const errorMsg = String(result.error);
+        logger.error({ tool: name, interfaceId: normalizedId, error: errorMsg }, 'tool failed');
+        throw new Error(`获取接口失败: ${errorMsg}`);
+      }
+
+      logger.info({ tool: name, interfaceId: normalizedId, resultType: typeof result, hasData: !!result }, 'tool success');
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
     if (name === 'rap2_get_repository_interfaces') {
       const { repositoryId } = (req.params.arguments || {});
-      if (!repositoryId) throw new Error('repositoryId 不能为空');
+      const normalizedId = validateAndNormalizeId('repositoryId', repositoryId);
+
       const client = createClient();
-      const result = await client.getRepositoryInterfaces(String(repositoryId));
-      if (result?.error) throw new Error(String(result.error));
-      logger.info({ tool: name, resultSummary: { length: Array.isArray(result) ? result.length : 0 } }, 'tool success');
-      return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+      const result = await client.getRepositoryInterfaces(normalizedId);
+
+      if (result?.error) {
+        const errorMsg = String(result.error);
+        logger.error({ tool: name, repositoryId: normalizedId, error: errorMsg }, 'tool failed');
+        throw new Error(`获取仓库接口失败: ${errorMsg}`);
+      }
+
+      logger.info({ tool: name, repositoryId: normalizedId, resultCount: Array.isArray(result) ? result.length : 0 }, 'tool success');
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
     if (name === 'rap2_search_interfaces_by_keyword') {
       const { keyword, repositoryId } = (req.params.arguments || {});
-      if (!keyword) throw new Error('keyword 不能为空');
+
+      const normalizedKeyword = validateAndNormalizeKeyword(keyword);
+      const normalizedRepoId = validateAndNormalizeId('repositoryId', repositoryId, true); // 允许为空
+
       const client = createClient();
-      const result = await client.searchInterfacesByKeyword(String(keyword), repositoryId ? String(repositoryId) : undefined);
-      if (result?.error) throw new Error(String(result.error));
-      logger.info({ tool: name, resultSummary: { length: Array.isArray(result) ? result.length : 0 } }, 'tool success');
-      return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+      const result = await client.searchInterfacesByKeyword(normalizedKeyword, normalizedRepoId);
+
+      if (result?.error) {
+        const errorMsg = String(result.error);
+        logger.error({ tool: name, keyword: normalizedKeyword, repositoryId: normalizedRepoId, error: errorMsg }, 'tool failed');
+        throw new Error(`搜索接口失败: ${errorMsg}`);
+      }
+
+      logger.info({ tool: name, keyword: normalizedKeyword, repositoryId: normalizedRepoId, resultCount: Array.isArray(result) ? result.length : 0 }, 'tool success');
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
     throw new Error(`未知工具：${name}`);
   } catch (err) {
     logger.error({ tool: name, error: String(err?.message || err) }, 'tool error');
     return { content: [{ type: 'text', text: JSON.stringify({ error: String(err?.message || err) }) }] };
   }
-    if (name === 'rap2_nl_get_interface_by_text') {
-      const { text } = (req.params.arguments || {});
-      if (!text || typeof text !== 'string') throw new Error('text 不能为空');
-      const m = String(text).match(/接口\s*id\s*(\d+)|接口\s*(\d+)/i);
-      const id = m ? (m[1] || m[2]) : '';
-      if (!id) throw new Error('未在文本中识别到接口ID');
-      const client = createClient();
-      const ensure = await client.ensureSession();
-      if (!ensure) {
-        const res = await client.login();
-        if (res?.error) throw new Error(String(res.error));
-      }
-      const result = await client.getInterfaceById(String(id));
-      if (result?.error) throw new Error(String(result.error));
-      const payload = { interfaceId: String(id), data: result };
-      logger.info({ tool: name, resultSummary: { id: String(id) } }, 'tool success');
-      return { content: [{ type: 'text', text: JSON.stringify(payload) }] };
-    }
 });
 
 logger.info({ event: 'server.start' }, 'rap2 mcp server starting');
